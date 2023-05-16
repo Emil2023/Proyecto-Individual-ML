@@ -10,17 +10,18 @@ import numpy as np
 app = FastAPI()
 
 #Diccionario para el usario ingrese el mes y dia en español
-dias = {
-        'lunes': 'Monday',
-        'martes': 'Tuesday',
-        'miércoles': 'Wednesday',
-        'jueves': 'Thursday',
-        'viernes': 'Friday',
-        'sábado': 'Saturday',
-        'domingo': 'Sunday'
-    }
 
-meses = {
+#Cargamos nuestro dataset limpio
+df=pd.read_csv("clean_movies_dataset.csv")
+df['release_date'] = pd.to_datetime(df['release_date'])
+df['release_month'] = df['release_date'].dt.month_name()
+df['release_year'] = df['release_year'].astype(str)
+
+#'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
+@app.get("/peliculas_mes/{mes}")
+def peliculas_mes(mes):
+#Diccionario para el usario ingrese el mes en español        
+        meses = {
         'enero': 'January',
         'febrero': 'February',
         'marzo': 'March',
@@ -34,28 +35,27 @@ meses = {
         'noviembre': 'November',
         'diciembre': 'December'
     }
-
-#Cargamos nuestro dataset limpio
-df=pd.read_csv("clean_movies_dataset.csv")
-df['release_date'] = pd.to_datetime(df['release_date'])
-df['release_month'] = df['release_date'].dt.month_name()
-df['release_year'] = df['release_year'].astype(str)
-
-#'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
-@app.get("/peliculas_mes/{mes}")
-def peliculas_mes(mes):
-    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
-    df_mes = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
-    cantidad = len(df_mes)
-    return {'mes': mes.lower(), 'cantidad': cantidad}
+    fechas = pd.to_datetime(df['release_date'], format= '%Y-%m-%d')
+    nu_mes = fechas[fechas.dt.strftime('%B').str.capitalize() == months_translated[str(mes).lower()]]
+    respuesta = nu_mes.shape[0]
+    return {'mes':mes, 'cantidad':respuesta}
 
 #Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrenaron ese dia
 @app.get("/peliculas_dia/{dia}")
-def peliculas_dia(dia):
-    df['release_day'] = df['release_date'].dt.day_name()                                   
-    df_dia = df[df['release_day'] == dia]
-    cantidad = len(df_dia)
-    return {'dia':dia, 'cantidad':cantidad}
+def peliculas_dia(dia: str) -> dict:
+    
+    dias= {
+    'lunes': 'Monday',
+    'martes': 'Tuesday',
+    'miercoles': 'Wednesday',
+    'jueves': 'Thursday',
+    'viernes': 'Friday',
+    'sabado': 'Saturday',
+    'domingo': 'Sunday'}   
+    fechas = pd.to_datetime(df['release_date'], format= '%Y-%m-%d')
+    n_dia = fechas[fechas.dt.strftime('%A').str.capitalize() == day_translated[str(dia).lower()]]
+    respuesta = n_dia.shape[0]
+    return {'mes':dia, 'cantidad':respuesta}
                                         
 #Se ingresa la franquicia, retornando la cantidad de peliculas, ganancia total y promedio
 @app.get("/franquicia/{franquicia}")
@@ -91,12 +91,11 @@ def retorno(pelicula):
     return {'pelicula':pelicula, 'inversion':inversion, 'ganacia':ganancia,'retorno':retorno, 'año':anio}
  
 #ML                                        
-@app.get("/peliculas_recomendadas/{pelicula}")
+@app.get("/ml_movie/{pelicula}")
 def ml_movie(selected_title):
     df = pd.read_csv('clean_movies_dataset.csv') 
     k = 6
     generos_df = pd.read_csv('genre_binario.csv', index_col=0).astype('float32')
-
     selected_genres = df.loc[df['title'] == selected_title]['genre_names'].values[0]
     df['genre_similarity'] = df['genre_names'].apply(lambda x: len(set(selected_genres) & set(x)) / len(set(selected_genres) | set(x)))
     df['same_series'] = df['title'].apply(lambda x: 1 if 'Batman' in x else 0)
