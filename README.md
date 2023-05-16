@@ -22,10 +22,14 @@ Aplique los métodos de extracción, transformación y carga (ETL) para preparar
 
 - ***Analisis Exploratorio***
 Realice un análisis de investigación de datos (EDA) para obtener información sobre películas, como el encabezado, la descripción general y los géneros.
-Realice un Grafico de valores faltantes 
+Realice un Grafico de valores faltantes,Saque el porcentaje de valores faltantes y Pude observar mas a fondo el dataframe. Todo esto fue posible con python,pandas y matplotlib
+![](https://www.addkw.com/wp-content/uploads/2018/11/Etapas-del-analisis-de-datos.png)
+
+
 
 - ***Desarrollo de la API***
 Diseñe e implemente una serie de funciones y API integradas sin ningún problema con el sistema recomendado basado en el contenido,Verificando que este Disponible para el cliente.
+
 - ***Deployment***
 Para lograr el deploy tuve que usar render y subirlo para que pueda ser utilizada por la web
 
@@ -35,3 +39,6 @@ Para lograr el deploy tuve que usar render y subirlo para que pueda ser utilizad
 - Render
 - Numpy
 - Scikit-Learn
+
+
+
