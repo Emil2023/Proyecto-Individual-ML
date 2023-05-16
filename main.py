@@ -96,11 +96,7 @@ def ml_movie(selected_title):
     movies = list(df.iloc[indices]['title'])
     movies = sorted(movies, key=lambda x: (df.loc[df['title'] == x]['same_series'].values[0], df.loc[df['title'] == x]['vote_average'].values[0], df.loc[df['title'] == x]['genre_similarity'].values[0]), reverse=True)
     movies = [movie for movie in movies if movie != selected_title]
-    return movies[0:5]                                      
-
-
-if __name__ == "__main__":
-    asyncio.run(run_background_task())                                     
+    return movies[0:5]                                                           
                                         
                                         
                                         
