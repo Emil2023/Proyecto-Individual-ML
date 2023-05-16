@@ -37,15 +37,16 @@ meses = {
 
 #Cargamos nuestro dataset limpio
 df=pd.read_csv("clean_movies_dataset.csv")
-
+df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
 df['release_year'] = df['release_year'].astype(str)
+
 #'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
 @app.get("/peliculas_mes/{mes}")
 def peliculas_mes(mes):
-    df['release_date'] = pd.to_datetime(df['release_date']')
-    df_m = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
-    cantidad = len(df_m)
+    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
+    df_mes = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
+    cantidad = len(df_mes)
     return {'mes': mes.lower(), 'cantidad': cantidad}
 
 #Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrenaron ese dia
