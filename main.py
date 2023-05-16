@@ -98,29 +98,6 @@ def ml_movie(selected_title):
     movies = [movie for movie in movies if movie != selected_title]
     return movies[0:5]                                      
 
- router = APIRouter()
-
-def ping_my_api():
-    print("se hizo ping")
-    while True:
-        # Make a ping request to your own API
-        response = requests.get('https://emilioo-project.onrender.com/ping')
-        print('Ping executed:', response.status_code)
-        time.sleep(300)
-
-async def run_background_task():
-    while True:
-        background_task = asyncio.create_task(ping_my_api())
-        await asyncio.sleep(300)  # Wait for 5 minutes before starting the next task
-
-@app.get("/ping")
-async def ping():
-    return {"message": "pong"}
-
-@app.get("/start_ping_task")
-async def start_ping(background_tasks: BackgroundTasks):
-    background_tasks.add_task(run_background_task)
-    return {"message": "Ping task started"}
 
 if __name__ == "__main__":
     asyncio.run(run_background_task())                                     
