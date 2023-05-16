@@ -6,21 +6,28 @@ import datetime as dt
 import locale
 import ast
 import numpy as np
+import time
+import asyncio
+from fastapi.routing import APIRouter
+from fastapi import BackgroundTasks
 
-app = FastAPI()
-#Cargamos nuestro dataset limpio
-df=pd.read_csv("clean_movies_dataset.csv")
 
 #Funcion para el usario ingrese el mes y dia en español
-def traducir_columna(df, columna, traducciones):
-    df[columna] = df[columna].replace(traducciones)
+app = FastAPI()
 
-meses = {'January':'Enero', 'February':'Febrero', 'March':'Marzo', 'April':'Abril', 'May':'Mayo', 'June':'Junio', 'July':'Julio', 'August':'Agosto', 'September':'Septiembre', 'October':'Octubre', 'November':'Noviembre', 'December':'Diciembre'}
-dias = {'Monday':'Lunes', 'Tuesday':'Martes', 'Wednesday':'Miércoles', 'Thursday':'Jueves', 'Friday':'Viernes', 'Saturday':'Sábado', 'Sunday':'Domingo'}
+df = pd.read_csv('datasets/movies_clean.csv')
+df['release_date'] = pd.to_datetime(df['release_date'])
+df['release_month'] = df['release_date'].dt.month_name()
+df['release_day'] = df['release_date'].dt.day_name()
 
-traducir_columna(df, 'release_month', meses)
-traducir_columna(df, 'release_day', dias)
-
+def traductor_mes():
+    meses = {'January':'Enero', 'February':'Febrero', 'March':'Marzo', 'April':'Abril', 'May':'Mayo', 'June':'Junio', 'July':'Julio', 'August':'Agosto', 'September':'Septiembre', 'October':'Octubre', 'November':'Noviembre', 'December':'Diciembre'}
+    df['release_month'] = df['release_month'].map(meses)
+traductor_mes()
+def traductor_dia():
+    dias = {'Monday':'Lunes', 'Tuesday':'Martes', 'Wednesday':'Miercoles', 'Thursday':'Jueves', 'Friday':'Viernes', 'Saturday':'Sabado', 'Sunday':'Domingo'}
+    df['release_day'] = df['release_day'].map(dias)
+traductor_dia()
 df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
 df['release_year'] = df['release_year'].astype(str)
