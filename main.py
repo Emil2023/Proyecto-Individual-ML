@@ -15,7 +15,7 @@ from fastapi import BackgroundTasks
 #Funcion para el usario ingrese el mes y dia en español
 app = FastAPI()
 
-df = pd.read_csv('datasets/movies_clean.csv')
+df = pd.read_csv('datasets/clean_movies_dataset.csv')
 df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
 df['release_day'] = df['release_date'].dt.day_name()
