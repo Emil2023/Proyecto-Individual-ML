@@ -19,7 +19,7 @@ df['release_year'] = df['release_year'].astype(str)
 
 #'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
 @app.get("/peliculas_mes/{mes}")
-def peliculas_mes(mes):
+def peliculas_mes(mes:str) -> dict:
 #Diccionario para el usario ingrese el mes en español        
         meses = {
         'enero': 'January',
@@ -35,10 +35,11 @@ def peliculas_mes(mes):
         'noviembre': 'November',
         'diciembre': 'December'
     }
-    fechas = pd.to_datetime(df['release_date'], format= '%Y-%m-%d')
-    nu_mes = fechas[fechas.dt.strftime('%B').str.capitalize() == months_translated[str(mes).lower()]]
-    respuesta = nu_mes.shape[0]
-    return {'mes':mes, 'cantidad':respuesta}
+    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
+    df_mes = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
+    cantidad = len(df_mes)
+    return {'mes': mes.lower(), 'cantidad': cantidad}
+
 
 #Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrenaron ese dia
 @app.get("/peliculas_dia/{dia}")
@@ -52,10 +53,11 @@ def peliculas_dia(dia: str) -> dict:
     'viernes': 'Friday',
     'sabado': 'Saturday',
     'domingo': 'Sunday'}   
-    fechas = pd.to_datetime(df['release_date'], format= '%Y-%m-%d')
-    n_dia = fechas[fechas.dt.strftime('%A').str.capitalize() == day_translated[str(dia).lower()]]
-    respuesta = n_dia.shape[0]
-    return {'mes':dia, 'cantidad':respuesta}
+ 
+    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
+    df_dia = df['release_date'][df['release_date'].dt.strftime('%A').str.capitalize() == dias[str(dia).lower()]]
+    cantidad = len(df_dia)
+    return {'dia': dia.lower(), 'cantidad': cantidad}
                                         
 #Se ingresa la franquicia, retornando la cantidad de peliculas, ganancia total y promedio
 @app.get("/franquicia/{franquicia}")
