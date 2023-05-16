@@ -8,57 +8,37 @@ import ast
 import numpy as np
 
 app = FastAPI()
-
-#Diccionario para el usario ingrese el mes y dia en español
-
 #Cargamos nuestro dataset limpio
 df=pd.read_csv("clean_movies_dataset.csv")
+
+#Funcion para el usario ingrese el mes y dia en español
+def traducir_columna(df, columna, traducciones):
+    df[columna] = df[columna].replace(traducciones)
+
+meses = {'January':'Enero', 'February':'Febrero', 'March':'Marzo', 'April':'Abril', 'May':'Mayo', 'June':'Junio', 'July':'Julio', 'August':'Agosto', 'September':'Septiembre', 'October':'Octubre', 'November':'Noviembre', 'December':'Diciembre'}
+dias = {'Monday':'Lunes', 'Tuesday':'Martes', 'Wednesday':'Miércoles', 'Thursday':'Jueves', 'Friday':'Viernes', 'Saturday':'Sábado', 'Sunday':'Domingo'}
+
+traducir_columna(df, 'release_month', meses)
+traducir_columna(df, 'release_day', dias)
+
 df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
 df['release_year'] = df['release_year'].astype(str)
 
+
 #'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
 @app.get("/peliculas_mes/{mes}")
-def peliculas_mes(mes:str) -> dict:
-#Diccionario para el usario ingrese el mes en español        
-        meses = {
-        'enero': 'January',
-        'febrero': 'February',
-        'marzo': 'March',
-        'abril': 'April',
-        'mayo': 'May',
-        'junio': 'June',
-        'julio': 'July',
-        'agosto': 'August',
-        'septiembre': 'September',
-        'octubre': 'October',
-        'noviembre': 'November',
-        'diciembre': 'December'
-    }
-    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
-    df_mes = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
+def peliculas_mes(mes)      
+df_mes = df[df['release_month'] == mes]
     cantidad = len(df_mes)
-    return {'mes': mes.lower(), 'cantidad': cantidad}
-
 
 #Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrenaron ese dia
 @app.get("/peliculas_dia/{dia}")
-def peliculas_dia(dia: str) -> dict:
-    
-    dias= {
-    'lunes': 'Monday',
-    'martes': 'Tuesday',
-    'miercoles': 'Wednesday',
-    'jueves': 'Thursday',
-    'viernes': 'Friday',
-    'sabado': 'Saturday',
-    'domingo': 'Sunday'}   
- 
-    df['release_date'] = pd.to_datetime(df['release_date'], format='%Y-%m-%d')
-    df_dia = df['release_date'][df['release_date'].dt.strftime('%A').str.capitalize() == dias[str(dia).lower()]]
+def peliculas_dia(dia)
+df_dia = df[df['release_day'] == dia]
     cantidad = len(df_dia)
-    return {'dia': dia.lower(), 'cantidad': cantidad}
-                                        
+    return {'dia':dia, 'cantidad':cantidad}
+
 #Se ingresa la franquicia, retornando la cantidad de peliculas, ganancia total y promedio
 @app.get("/franquicia/{franquicia}")
 def franquicia(franquicia):
@@ -74,6 +54,7 @@ def peliculas_pais(pais):
     df_pais = df[df['country'] == pais]
     cantidad = len(df_pais)
     return {'pais':pais, 'cantidad':cantidad}
+
 #Ingresas la productora, retornando la ganancia total y la cantidad de peliculas que produjeron
 @app.get("/productoras/{productora}")
 def productoras(productora):
@@ -84,13 +65,13 @@ def productoras(productora):
                                         
 #Ingresas la pelicula, retornando la inversion, la ganancia, el retorno y el año en el que se lanzo
 @app.get("/retorno/{pelicula}")
-def retorno(pelicula):
-    df_pelicula = df[df['title'] == pelicula]
-    inversion = df_pelicula['budget'].sum()
-    ganancia = df_pelicula['revenue'].sum()-df_pelicula['budget'].sum()
-    retorno = df_pelicula['return'].sum()
-    anio = df_pelicula['release_year'].values[0]
-    return {'pelicula':pelicula, 'inversion':inversion, 'ganacia':ganancia,'retorno':retorno, 'año':anio}
+def retorno(pelicula: str):
+    pelicula_df = df.loc[df['title'] == pelicula.title()]
+    inversion = pelicula_df['budget'].iloc[0].item()
+    ganancia = pelicula_df['revenue'].iloc[0].item()
+    retorno = pelicula_df['return'].iloc[0].item()
+    anio = pelicula_df['release_year'].iloc[0].item()
+    return {'pelicula': pelicula, 'inversion': inversion, 'ganancia': ganancia, 'retorno': retorno, 'anio': anio }
  
 #ML                                        
 @app.get("/ml_movie/{pelicula}")
