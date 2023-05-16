@@ -1,11 +1,11 @@
 # Proyecto Individual Soy Henry N°1  ML
 ![](https://assets.soyhenry.com/henry-landing/assets/Henry/logo-white.png)
 
-##Introduccion
+## Introduccion
 Este es un proyecto de recomendación de películas para una start-up que provee servicios de agregación de plataformas de streaming. Este proyecto implica la creación de un sistema de recomendación y una API para acceder a los datos de la empresa.Los datos han sido procesados y transformados para ser utilizados en el modelo de recomendación(ETL),
 se llevo acabo un analisis exploratorio de los datos para examinar las relaciones entre las diferentes variables.
 
-##Metas
+## Metas
 - ***Transformacion***
 Aplique los métodos de extracción, transformación y carga (ETL) para preparar y borrar el conjunto de Nulos y Desanidar Los Campos blongs_to_collection, production_companies y otros.
 
@@ -29,7 +29,7 @@ Diseñe e implemente una serie de funciones y API integradas sin ningún problem
 - ***Deployment***
 Para lograr el deploy tuve que usar render y subirlo para que pueda ser utilizada por la web
 
-##Librerias Utilizadas
+## Librerias Utilizadas
 - Pandas
 - Fastapi
 - Render
