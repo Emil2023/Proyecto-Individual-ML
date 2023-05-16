@@ -8,7 +8,7 @@ import ast
 import numpy as np
 import time
 import asyncio
-
+from sklearn.neighbors import NearestNeighbors
 
 #Funcion para el usario ingrese el mes y dia en español
 app = FastAPI(
