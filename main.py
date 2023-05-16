@@ -9,52 +9,52 @@ import numpy as np
 
 app = FastAPI()
 
-meses_esp = {
-    'January': 'enero',
-    'February': 'febrero',
-    'March': 'marzo',
-    'April': 'abril',
-    'May': 'mayo',
-    'June': 'junio',
-    'July': 'julio',
-    'August': 'agosto',
-    'September': 'septiembre',
-    'October': 'octubre',
-    'November': 'noviembre',
-    'December': 'diciembre'
-}
+#Diccionario para el usario ingrese el mes y dia en español
+dias = {
+        'lunes': 'Monday',
+        'martes': 'Tuesday',
+        'miércoles': 'Wednesday',
+        'jueves': 'Thursday',
+        'viernes': 'Friday',
+        'sábado': 'Saturday',
+        'domingo': 'Sunday'
+    }
 
-dias_semana = {
-    'Monday': 'Lunes',
-    'Tuesday': 'Martes',
-    'Wednesday': 'Miércoles',
-    'Thursday': 'Jueves',
-    'Friday': 'Viernes',
-    'Saturday': 'Sábado',
-    'Sunday': 'Domingo'
-}
+meses = {
+        'enero': 'January',
+        'febrero': 'February',
+        'marzo': 'March',
+        'abril': 'April',
+        'mayo': 'May',
+        'junio': 'June',
+        'julio': 'July',
+        'agosto': 'August',
+        'septiembre': 'September',
+        'octubre': 'October',
+        'noviembre': 'November',
+        'diciembre': 'December'
+    }
 
+#Cargamos nuestro dataset limpio
 df=pd.read_csv("clean_movies_dataset.csv")
 
-df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
-df['release_day'] = df['release_date'].dt.day_name()
 df['release_year'] = df['release_year'].astype(str)
 
 @app.get("/peliculas_mes/{mes}")
 def peliculas_mes(mes):
-    fechas=pd.to_datetime(df['release_date'],format='%Y-%m-%d')
-    nmes=fechas[fechas.dt.month_name(locale='es_CO')==mes.capitalize()]
-    respuesta=nmes.shape[0]
-    return {'mes':mes, 'cantidad':respuesta}
+    df['release_date'] = pd.to_datetime(df['release_date']')
+    df_m = df['release_date'][df['release_date'].dt.strftime('%B').str.capitalize() == meses[str(mes).lower()]]
+    cantidad = len(df_m)
+    return {'mes': mes.lower(), 'cantidad': cantidad}
 
 
 @app.get("/peliculas_dia/{dia}")
 def peliculas_dia(dia):
-    fechas=pd.to_datetime(df['release_date'],format='%Y-%m-%d')
-    ndia=fechas[fechas.dt.day_name(locale='es_CO')==dia.capitalize()]
-    respuesta=ndia.shape[0]
-    return {'dia':dia, 'cantidad':respuesta}
+    df['release_day'] = df['release_date'].dt.day_name()                                   
+    df_dia = df[df['release_day'] == dia]
+    cantidad = len(df_dia)
+    return {'dia':dia, 'cantidad':cantidad}
 
 @app.get("/franquicia/{franquicia}")
 def franquicia(franquicia):
