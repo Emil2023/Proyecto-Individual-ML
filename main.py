@@ -70,13 +70,15 @@ def productoras(productora):
                                         
 #Ingresas la pelicula, retornando la inversion, la ganancia, el retorno y el año en el que se lanzo
 @app.get("/retorno/{pelicula}")
-def retorno(pelicula: str):
-    pelicula_df = df.loc[df['title'] == pelicula.title()]
-    inversion = pelicula_df['budget'].iloc[0].item()
-    ganancia = pelicula_df['revenue'].iloc[0].item()
-    retorno = pelicula_df['return'].iloc[0].item()
-    anio = pelicula_df['release_year'].iloc[0].item()
-    return {'pelicula': pelicula, 'inversion': inversion, 'ganancia': ganancia, 'retorno': retorno, 'anio': anio }
+def retorno(pelicula):
+    pelis=df[['title','budget','revenue','return','release_year']].dropna()
+    pelis['title']=pelis['title'].map(str.lower)
+    pelis=pelis[pelis['title']==str(pelicula).lower()]
+    inver=pelis['budget'].iloc[0]
+    gan=pelis['revenue'].iloc[0]
+    ret=pelis['return'].iloc[0]
+    an=pelis['release_year'].iloc[0]
+    return {'pelicula':pelicula, 'inversion':inver, 'ganacia':gan,'retorno':ret, 'anio':an}
  
 #ML                                        
 @app.get("/ml_movie/{pelicula}")
