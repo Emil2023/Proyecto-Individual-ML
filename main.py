@@ -34,7 +34,7 @@ dias_semana = {
     'Sunday': 'Domingo'
 }
 
-df=pd.read_csv(r"C:\Users\WINDOW 10\Desktop\Labs\Datasets\clean_movies_dataset.csv")
+df=pd.read_csv("clean_movies_dataset.csv")
 
 df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
