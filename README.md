@@ -29,7 +29,7 @@ Realice un Grafico de valores faltantes,Saque el porcentaje de valores faltantes
 
 - ***Desarrollo de la API***
 Diseñe e implemente una serie de funciones y API integradas sin ningún problema con el sistema recomendado basado en el contenido,Verificando que este Disponible para el cliente.
-
+Link De la API: emilioo-project.onrender.com/docs
 - ***Deployment***
 Para lograr el deploy tuve que usar render y subirlo para que pueda ser utilizada por la web
 
