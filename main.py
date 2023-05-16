@@ -8,8 +8,6 @@ import ast
 import numpy as np
 import time
 import asyncio
-from fastapi.routing import APIRouter
-from fastapi import BackgroundTasks
 
 
 #Funcion para el usario ingrese el mes y dia en español
