@@ -25,17 +25,16 @@ df['release_date'] = pd.to_datetime(df['release_date'])
 df['release_month'] = df['release_date'].dt.month_name()
 df['release_year'] = df['release_year'].astype(str)
 
-
-#'Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
+#Se ingresa el mes y la funcion retorna la cantidad de peliculas que se estrenaron ese mes
 @app.get("/peliculas_mes/{mes}")
-def peliculas_mes(mes)      
-df_mes = df[df['release_month'] == mes]
+def peliculas_mes(mes):
+    df_mes = df[df['release_month'] == mes]
     cantidad = len(df_mes)
-
+    return {'mes':mes, 'cantidad':cantidad}
 #Se ingresa el dia y la funcion retorna la cantidad de peliculas que se estrenaron ese dia
 @app.get("/peliculas_dia/{dia}")
-def peliculas_dia(dia)
-df_dia = df[df['release_day'] == dia]
+def peliculas_dia(dia):
+    df_dia = df[df['release_day'] == dia]
     cantidad = len(df_dia)
     return {'dia':dia, 'cantidad':cantidad}
 
