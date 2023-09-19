@@ -1,5 +1,4 @@
-# Proyecto Individual Soy Henry N°1  ML
-![](https://assets.soyhenry.com/henry-landing/assets/Henry/logo-white.png)
+# Proyecto Individual  ML
 
 ## Introduccion
 Este es un proyecto de recomendación de películas para una start-up que provee servicios de agregación de plataformas de streaming. Este proyecto implica la creación de un sistema de recomendación y una API para acceder a los datos de la empresa.Los datos han sido procesados y transformados para ser utilizados en el modelo de recomendación(ETL),
